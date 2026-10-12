@@ -29,7 +29,6 @@ def test_ticket_can_be_created_with_high_priority(employee, category):
     assert ticket.priority == Ticket.Priority.HIGH
 
 
-@pytest.mark.django_db
 def test_ticket_admin_has_required_columns():
     model_admin = TicketAdmin(Ticket, AdminSite())
     assert "priority" in model_admin.list_display
@@ -40,9 +39,9 @@ def test_ticket_admin_has_required_columns():
     assert "description" in model_admin.search_fields
 
 
-@pytest.mark.django_db
 def test_ticket_admin_has_three_actions():
     model_admin = TicketAdmin(Ticket, AdminSite())
     assert "close_selected_tickets" in model_admin.actions
     assert "reopen_selected_tickets" in model_admin.actions
     assert "export_tickets_csv" in model_admin.actions
+
