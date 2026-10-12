@@ -45,3 +45,10 @@ def test_ticket_admin_has_three_actions():
     assert "export_tickets_csv" in model_admin.actions
 
 
+
+
+
+
+
+
+
