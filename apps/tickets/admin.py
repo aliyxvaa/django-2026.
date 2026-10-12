@@ -1,6 +1,7 @@
 ```python
 from django.contrib import admin
-from django.http import HttpRequest
+import csv
+from django.http import HttpRequest, HttpResponse
 
 from .models import Category, Ticket
 
@@ -10,6 +11,44 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name")
     search_fields = ("name",)
     ordering = ("name",)
+
+    @admin.action(description="Экспортировать выбранные заявки в CSV")
+    def export_tickets_csv(self, request, queryset):
+        response = HttpResponse(
+            content_type="text/csv; charset=utf-8"
+        )
+        response["Content-Disposition"] = (
+            'attachment; filename="tickets.csv"'
+        )
+        response.write("\ufeff")
+
+        writer = csv.writer(response)
+        writer.writerow([
+            "ID",
+            "Тема",
+            "Категория",
+            "Статус",
+            "Приоритет",
+            "Автор",
+            "Исполнитель",
+            "Дата создания",
+        ])
+
+        for ticket in queryset.select_related(
+            "category", "author", "assignee"
+        ):
+            writer.writerow([
+                ticket.pk,
+                ticket.title,
+                ticket.category.name,
+                ticket.get_status_display(),
+                ticket.get_priority_display(),
+                ticket.author,
+                ticket.assignee or "",
+                ticket.created_at,
+            ])
+
+        return response
 
 
 class TicketInline(admin.TabularInline):
@@ -66,7 +105,11 @@ class TicketAdmin(admin.ModelAdmin):
         updated = queryset.update(status=Ticket.Status.NEW)
         self.message_user(request, f"Возвращено в новые: {updated}")
 
-    actions = ("close_selected_tickets", "reopen_selected_tickets")
+    actions = (
+    "close_selected_tickets",
+    "reopen_selected_tickets",
+    "export_tickets_csv",
+)
 
     def get_queryset(self, request: HttpRequest):
         queryset = super().get_queryset(request)
