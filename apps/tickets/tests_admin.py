@@ -1,11 +1,9 @@
 
 import pytest
 from django.contrib.admin.sites import AdminSite
-from django.test import RequestFactory
 
-from apps.accounts.models import User
 from apps.tickets.admin import TicketAdmin
-from apps.tickets.models import Category, Ticket
+from apps.tickets.models import Ticket
 
 
 @pytest.mark.django_db
