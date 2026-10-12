@@ -17,11 +17,20 @@ class Category(models.Model):
 class Ticket(models.Model):
     """Заявка сотрудника. Стартовая модель — студенты расширяют её фичами (приоритет, история, вложения, SLA…)."""
 
-    class Status(models.TextChoices):
-        NEW = "new", "Новая"
-        IN_PROGRESS = "in_progress", "В работе"
-        DONE = "done", "Выполнена"
-        REJECTED = "rejected", "Отклонена"
+    
+    class Priority(models.TextChoices):
+        LOW = "low", "Низкий"
+        NORMAL = "normal", "Обычный"
+        HIGH = "high", "Высокий"
+        CRITICAL = "critical", "Критический"
+        
+    priority = models.CharField(
+        "Приоритет",
+        max_length=10,
+        choices=Priority.choices,
+        default=Priority.NORMAL,
+        db_index=True,
+    )
 
     title = models.CharField("Тема", max_length=200)
     description = models.TextField("Описание")
