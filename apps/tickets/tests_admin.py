@@ -1,4 +1,3 @@
-
 import pytest
 from django.contrib.admin.sites import AdminSite
 
@@ -44,4 +43,5 @@ def test_ticket_admin_has_three_actions():
     assert "close_selected_tickets" in model_admin.actions
     assert "reopen_selected_tickets" in model_admin.actions
     assert "export_tickets_csv" in model_admin.actions
+
 
