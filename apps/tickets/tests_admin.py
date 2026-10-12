@@ -7,22 +7,20 @@ from django.contrib.admin.sites import AdminSite
 from apps.tickets.admin import TicketAdmin
 from apps.tickets.models import Ticket
 @pytest.mark.django_db
-def test_ticket_priority_default(employee, category):
+def test_ticket_priority_default(employee):
     ticket = Ticket.objects.create(
         title="Тестовая заявка",
         description="Проверка приоритета",
-        category=category,
         author=employee,
     )
     assert ticket.priority == Ticket.Priority.NORMAL
 
 
 @pytest.mark.django_db
-def test_ticket_can_be_created_with_high_priority(employee, category):
+def test_ticket_can_be_created_with_high_priority(employee):
     ticket = Ticket.objects.create(
         title="Срочная заявка",
         description="Нужна срочная помощь",
-        category=category,
         author=employee,
         priority=Ticket.Priority.HIGH,
     )
